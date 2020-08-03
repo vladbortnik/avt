@@ -25,7 +25,9 @@ class Storage:
 	def read(self, user_id):
 		file_object = open(self.filename, 'r')
 		for line in file_object.readlines():
+			#print(line)
 			cur_user = json.loads(str(line))
+			#print(cur_user)
 			if cur_user['id'] == user_id:
 				file_object.close()
 				return cur_user
@@ -56,12 +58,35 @@ class Storage:
 	# 	return -1
 
 	def file_update(self, user_id, user):
-		with fileinput.input(self.filename, inplace=True) as f:
+		with fileinput.input(self.filename, inplace=False) as f:
 			for line in f:
-				if line.consist(str(user_id)):
-					new_line = '123'
-					new_line = line.replace(line, new_line)
-					print(new_line, end='')
+				if line.find(str(user_id)):
+					
+					print(' -1. str(user_id) = ', str(user_id), '\n')
+					print(' -1. type(str(user_id)) = ', type(str(user_id)), '\n')
+					
+					#print(' 0. line.find = ', line.find(str(user_id)), '\n')
+					#print('0. type(line.find(str(user_id))', type(line.find(str(user_id)), '\n\n')
+					
+					print(" 1. line = ", line, "\n")
+				    print(" 1. type(line) = ", type(line), "\n")
+					
+					old_user = json.loads(line)
+					
+					print(' 2. old_user = ', old_user, '\n')
+					print(' 2. type(old_user) = ', type(old_user), '\n\n')
+					
+					old_user.update(user)
+					
+					print(' 3. old_user = ', old_user, '\n')
+					print(' 3. type(old_user) = ', type(old_user), '\n\n')
+					
+					json_data = json.dumps(old_user)
+					
+					print(' 4. json_data = ', json_data, '\n')	
+					print(' 4. type(json_data) = ', type(json_data), '\n\n')
+					
+					print(' !', json_data, end='\n')
 		return -1
 
 
@@ -69,10 +94,12 @@ class Storage:
 storage = Storage('user.txt')
 id1 = storage.create({'name': 'Bob', 'age': '26'})
 id2 = storage.create({'name': 'Marley', 'age': '28'})
-print(storage.read(id1))
-print(storage.read(id2))
-storage.file_update(id2, {'name': 'Bob', 'age': '36'})
-print(storage.read(id2))
+#print(id1)
+#print(id2)
+#print(storage.read(id1))
+#print(storage.read(id2))
+storage.file_update({'id': id1}, {'name': 'Bob', 'age': '36'})
+#print(storage.read(id2))
 
 #print(id)
 
