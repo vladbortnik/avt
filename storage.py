@@ -1,6 +1,5 @@
 import json
 from uuid import uuid4
-import sys
 from pprint import pprint
 
 class Storage:
@@ -18,9 +17,7 @@ class Storage:
 	def read(self, user_id):
 		file_object = open(self.filename, 'r')
 		for line in file_object.readlines():
-			#print(line)
 			cur_user = json.loads(str(line))
-			#print(cur_user)
 			if cur_user['id'] == user_id:
 				file_object.close()
 				return cur_user
@@ -38,7 +35,7 @@ class Storage:
 			return user['id'] == user_id
 
 # LIST COMPREHENTION		
-# new_list = [new_element for old_element in old_list if condition else old_element]
+# new_list = [new_element if condition else old_element for old_element in old_list]
 
 		users = [dict(old_user, **user) 
 				 if old_user['id'] == user_id
@@ -55,22 +52,26 @@ class Storage:
 
 		return user_id
 
-	def delete(user_id):
-		pass
+	def delete(self, user_id):
+		users = []
+		with open(self.filename, 'r') as file_object:
+			for line in file_object.readlines():
+				users.append(json.loads(line))
 
+		def is_not_user(user):
+			return user['id'] != user_id
+		filtered_list = list(filter(is_not_user, users))
+
+		with open(self.filename, 'w') as file_object:
+			for user in filtered_list:
+				file_object.write(json.dumps(user) + '\n')
+
+		return user_id
 
 
 
 storage = Storage('user.txt')
 id1 = storage.create({'name': 'Bob', 'age': '26'})
 id2 = storage.create({'name': 'Marley', 'age': '28'})
-# print(id1)
-# print(id2)
-# print(storage.read(id1))
-# print(storage.read(id2))
 print(storage.update(id1, {'name': 'Bob', 'age': '36'}))
-#print(storage.read(id2))
-
-#print(id)
-
-#print(read('667db193-12da-4f06-8514-71875791e15d'))
+print(storage.delete(id2))
