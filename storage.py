@@ -1,18 +1,11 @@
 import json
 from uuid import uuid4
 import sys
-import fileinput
+from pprint import pprint
 
 class Storage:
 	def __init__(self, filename):
 		self.filename = filename
-
-	#create, read, update, delete
-
-	# class Pair:
-	# 	def __init__(self, k, v):
-	# 		self.k = id
-	# 		self.v = user[user_id]
 
 	def create(self, user):
 		user['id'] = str(uuid4())
@@ -32,73 +25,50 @@ class Storage:
 				file_object.close()
 				return cur_user
 		file_object.close()
-		return {-1: -1}
+		return False
 
-	# def file_update(self, user_id, user):
-	# 	#file_object = open(self.filename, 'r+')
-	# 	for line in fileinput.input(self.filename, inplace=1):
-	# 		cur_user = json.loads(line)
-	# 		if cur_user['id'] == user_id:
-	# 			cur_user['age'] = user['age']
-	# 			cur_user['id'] = user_id
-	# 			#user.update('age': '36')
-	# 			#user.update('id': user_id)
-	# 			json_data = json.dumps(cur_user)
-	# 			#new_line = line.replace(line, json_data)
-	# 			sys.stdout.write(json_data)
-	# 			print('ok!')
-	# 			#  ---- CONTINUE HERE ------
+	def update(self, user_id, user):
+		with open(self.filename, 'r') as file_object:
+			users = []
+			for line in file_object.readlines():
+				cur_user = json.loads(line)
+				users.append(cur_user)
 
-				
-				
-	# 			#file_object.write(json_data + '\n')
-	# 			#file_object.close()
-	# 			return user_id
-	# 	#file_object.close()
-	# 	return -1
+		def is_user(user):
+			return user['id'] == user_id
 
-	def file_update(self, user_id, user):
-		with fileinput.input(self.filename, inplace=False) as f:
-			for line in f:
-				if line.find(str(user_id)):
-					
-					print(' -1. str(user_id) = ', str(user_id), '\n')
-					print(' -1. type(str(user_id)) = ', type(str(user_id)), '\n')
-					
-					#print(' 0. line.find = ', line.find(str(user_id)), '\n')
-					#print('0. type(line.find(str(user_id))', type(line.find(str(user_id)), '\n\n')
-					
-					print(" 1. line = ", line, "\n")
-				    print(" 1. type(line) = ", type(line), "\n")
-					
-					old_user = json.loads(line)
-					
-					print(' 2. old_user = ', old_user, '\n')
-					print(' 2. type(old_user) = ', type(old_user), '\n\n')
-					
-					old_user.update(user)
-					
-					print(' 3. old_user = ', old_user, '\n')
-					print(' 3. type(old_user) = ', type(old_user), '\n\n')
-					
-					json_data = json.dumps(old_user)
-					
-					print(' 4. json_data = ', json_data, '\n')	
-					print(' 4. type(json_data) = ', type(json_data), '\n\n')
-					
-					print(' !', json_data, end='\n')
-		return -1
+# LIST COMPREHENTION		
+# new_list = [new_element for old_element in old_list if condition else old_element]
+
+		users = [dict(old_user, **user) 
+				 if old_user['id'] == user_id
+				 else old_user
+				 for old_user in users]
+
+		if not list(filter(is_user, users)):
+			return None
+
+		with open(self.filename, 'w') as file_object:
+			for user in users:
+				json_data = json.dumps(user)
+				file_object.write(json_data + '\n')
+
+		return user_id
+
+	def delete(user_id):
+		pass
+
 
 
 
 storage = Storage('user.txt')
 id1 = storage.create({'name': 'Bob', 'age': '26'})
 id2 = storage.create({'name': 'Marley', 'age': '28'})
-#print(id1)
-#print(id2)
-#print(storage.read(id1))
-#print(storage.read(id2))
-storage.file_update({'id': id1}, {'name': 'Bob', 'age': '36'})
+# print(id1)
+# print(id2)
+# print(storage.read(id1))
+# print(storage.read(id2))
+print(storage.update(id1, {'name': 'Bob', 'age': '36'}))
 #print(storage.read(id2))
 
 #print(id)
