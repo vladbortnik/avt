@@ -6,6 +6,9 @@ class Storage:
     def __init__(self, filename):
         self.filename = filename
 
+    def __repr__(self):
+        return f'<Storage filename={self.filename}>'
+
     def create(self, user):
         user['id'] = str(uuid4())
         file_object = open(self.filename, 'a')
