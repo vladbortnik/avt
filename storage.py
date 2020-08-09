@@ -70,8 +70,8 @@ class Storage:
 
 
 
-storage = Storage('user.txt')
-id1 = storage.create({'name': 'Bob', 'age': '26'})
-id2 = storage.create({'name': 'Marley', 'age': '28'})
-print(storage.update(id1, {'name': 'Bob', 'age': '36'}))
-print(storage.delete(id2))
+# storage = Storage('user.txt')
+# id1 = storage.create({'name': 'Bob', 'age': '26'})
+# id2 = storage.create({'name': 'Marley', 'age': '28'})
+# print(storage.update(id1, {'name': 'Bob', 'age': '36'}))
+# print(storage.delete(id2))
