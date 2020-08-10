@@ -4,13 +4,13 @@ services:
     container_name: app-server
     build: ./app-server
     environment:
-      - FLASK_APP=/srv/app/wsgi.py
+      - FLASK_APP=/srv/app/app.py
       - FLASK_DEBUG=1
       - FLASK_SECRET_KEY=sandbox
     volumes:
       - ./app-server/app:/srv/app
-    # command: flask run --host=0.0.0.0 --port=5000
+    command: flask run --host=0.0.0.0 --port=5000
     # command: gunicorn wsgi:app --chdir /srv/app -b 0.0.0.0:5000
     
     # THIS LINE WILL ALLOW DOCKER CONTAINER TO STAY ALIVE WITH NO SERVER RUNNING
-    command: tail -f /dev/null
+    # command: tail -f /dev/null
