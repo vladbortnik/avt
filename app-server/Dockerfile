@@ -7,3 +7,5 @@ run pip3 install -r requirements.txt
 
 run mkdir /srv/app
 workdir /srv/app
+
+expose 5000

@@ -3,6 +3,8 @@ services:
   app_server:
     container_name: app-server
     build: ./app-server
+    ports:
+      - "5000:5000"
     environment:
       - FLASK_APP=/srv/app/app.py
       - FLASK_DEBUG=1
