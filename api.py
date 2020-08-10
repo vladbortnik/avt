@@ -17,7 +17,6 @@ console.log(f'[bold red]error_message',
 
 
 class API:
-
     def __init__(self, storage, key):
         self.storage = storage
         self.key = key
@@ -66,7 +65,6 @@ class API:
 
 # TEMPLATE: HOW TO PASS UNKNOWN ARGUMENTS TO THE DECORATOR
 # function(*args, **kwargs)
-
 
 # def decorator(function):
 #     def wrapper(value):
