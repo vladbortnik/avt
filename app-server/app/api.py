@@ -16,6 +16,14 @@ console = Console()
 #             log_locals=True)
 
 
+def decorator(function):
+    def wrapper(self, *args, **kwargs):
+        if self.key != kwargs['key']:
+            return 403
+        return function(self, *args, **kwargs)
+    return wrapper
+
+
 class API:
 
     def __init__(self, storage, key):
@@ -26,12 +34,12 @@ class API:
         return f'<API key={self.key} storage={self.storage}>'
 
     # TODO: Move decorator out of API class
-    def decorator(function):
-        def wrapper(self, *args, **kwargs):
-            if self.key != kwargs['key']:
-                return 403
-            return function(self, *args, **kwargs)
-        return wrapper
+    # def decorator(function):
+    #     def wrapper(self, *args, **kwargs):
+    #         if self.key != kwargs['key']:
+    #             return 403
+    #         return function(self, *args, **kwargs)
+    #     return wrapper
 
     @decorator
     def post(self, user, key):

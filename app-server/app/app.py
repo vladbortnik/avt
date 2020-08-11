@@ -26,18 +26,33 @@ storage = Storage('user.txt')
 
 api = API(storage, key='123')
 
+# def decorator(function):
+#     def wrapper(self, *args, **kwargs):
+#         if 
+
 
 @app.route('/', methods=['POST'])
 def create_user():
     user = request.get_json()['user']
     key = request.get_json()['key']
     user_id = api.post(user, key=key)
-    return jsonify({'user_id': user_id})
+    if 
+    return {'user_id': user_id}, 201
 
 
-# @app.route('/', methods=['GET', 'POST'])
-# def get():
-#   return 'YOO'
+# @app.route('/user/<id>', methods=['GET'])
+# def read_user(id):
+#     try:
+#         decorator(api.get)
+#         return {'user': user}
+#     except Exception as e:
+#         raise e
+#     else:
+#         pass
+#     id = 
+#     user = api.get(id, key=key)
+
+
 
 # jsonify() returns 'request' object
 # @app.route('/user', methods=['GET', 'POST'])
