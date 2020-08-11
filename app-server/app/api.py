@@ -12,8 +12,8 @@ from rich.console import Console
 # log.info('Logger is enabled')
 
 console = Console()
-console.log(f'[bold red]error_message',
-            log_locals=True)
+# console.log(f'[bold red]error_message',
+#             log_locals=True)
 
 
 class API:
