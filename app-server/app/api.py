@@ -25,6 +25,7 @@ class API:
     def __repr__(self):
         return f'<API key={self.key} storage={self.storage}>'
 
+    # TODO: Move decorator out of API class
     def decorator(function):
         def wrapper(self, *args, **kwargs):
             if self.key != kwargs['key']:

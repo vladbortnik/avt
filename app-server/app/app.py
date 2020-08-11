@@ -4,6 +4,7 @@ from flask import request
 from rich.console import Console
 from rich.logging import RichHandler
 import logging
+from flask import jsonify
 
 
 logging.basicConfig(level="NOTSET",
@@ -24,8 +25,10 @@ app = Flask(__name__)
 def get():
     return 'YOO'
 
-
+# jsonify() returns 'request' object
 @app.route('/user', methods=['GET', 'POST'])
 def post():
-    console.log(f'{request.args}')
-    return f'POST Request Succesfull: '
+    #    console.log(f'{request.args}')
+    user = request.get_json()['user']
+    console.log(f'POST', log_locals=True)
+    return jsonify({'user': user})
