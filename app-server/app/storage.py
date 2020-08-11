@@ -12,7 +12,7 @@ class Storage:
     def create(self, user):
         user['id'] = str(uuid4())
         file_object = open(self.filename, 'a')
-        json_data = json.dumps(user)    
+        json_data = json.dumps(user)
         file_object.write(json_data + '\n')
         file_object.close()
         return user['id']
@@ -37,10 +37,10 @@ class Storage:
         def is_user(user):
             return user['id'] == user_id
 
-# LIST COMPREHENTION        
+# LIST COMPREHENTION
 # new_list = [new_element if condition else old_element for old_element in old_list]
 
-        users = [dict(old_user, **user) 
+        users = [dict(old_user, **user)
                  if old_user['id'] == user_id
                  else old_user
                  for old_user in users]
