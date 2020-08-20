@@ -31,6 +31,8 @@ class API:
         self.key = key
 
     def __repr__(self):
+        console.log(f'[bold __repr__(api)',
+                    log_locals=True)
         return f'<API key={self.key} storage={self.storage}>'
 
     # TODO: Move decorator out of API class
@@ -58,6 +60,7 @@ class API:
     @decorator
     def delete(self, user_id, key):
         return self.storage.delete(user_id)
+
 
 
 # from rich.logging import RichHandler

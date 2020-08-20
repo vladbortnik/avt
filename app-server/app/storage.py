@@ -2,6 +2,7 @@ import json
 from uuid import uuid4
 from pprint import pprint
 
+
 class Storage:
     def __init__(self, filename):
         self.filename = filename
