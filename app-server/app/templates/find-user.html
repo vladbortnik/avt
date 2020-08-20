@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+        <h1>Look up Database for a User</h1>
+        <hr>
+
+        <form action="/find-user" method="POST">
+
+        <div class="form-group">
+          <label>User_ID</label>
+          <input type="text" class="form-control" id="user_id" name="user_id" placeholder="Type 'user_id' here">
+        </div>
+
+        <div class="form-group">
+          <label>Key</label>
+          <input type="text" class="form-control" id="key" name="key" placeholder="Select a key">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Look up</button>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

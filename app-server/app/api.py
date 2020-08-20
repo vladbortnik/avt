@@ -45,8 +45,8 @@ class API:
 
     @decorator
     def post(self, user, key):
-        console.log(f'[bold green]method post',
-                    log_locals=True)
+        # console.log(f'[bold green]method post',
+        #             log_locals=True)
         return self.storage.create(user)
 
     @decorator
@@ -61,6 +61,9 @@ class API:
     def delete(self, user_id, key):
         return self.storage.delete(user_id)
 
+    @decorator
+    def list_all(self, key='key'):
+        return self.storage.list_all()
 
 
 # from rich.logging import RichHandler

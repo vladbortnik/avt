@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+        <h1>Check all available Users</h1>
+        <hr>
+
+        <form action="/list-all-users" method="POST">
+
+        <div class="form-group">
+          <label>Key</label>
+          <input type="text" class="form-control" id="key" name="key" placeholder="Enter the Key">
+        </div>
+
+        <button type="submit" class="btn btn-primary">List All</button>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

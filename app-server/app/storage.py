@@ -1,6 +1,9 @@
 import json
 from uuid import uuid4
-from pprint import pprint
+from rich.console import Console
+import os.path
+
+console = Console()
 
 
 class Storage:
@@ -72,10 +75,12 @@ class Storage:
 
         return user_id
 
-
-
-# storage = Storage('user.txt')
-# id1 = storage.create({'name': 'Bob', 'age': '26'})
-# id2 = storage.create({'name': 'Marley', 'age': '28'})
-# print(storage.update(id1, {'name': 'Bob', 'age': '36'}))
-# print(storage.delete(id2))
+    def list_all(self):
+        users = []
+        if not os.path.isfile(self.filename):
+            return users
+        with open(self.filename, 'r') as file_object:
+            for line in file_object.readlines():
+                users.append(line)
+                console.log(f'line: {line}', log_locals=True)
+        return users
