@@ -116,6 +116,13 @@ def list_all():
 
     return render_template('get-list-users.html', key='key')
 
+
+@app.route('/validation-form', methods=['GET', 'POST'])
+def validation_form():
+    return render_template('validation-form.html')
+
+
+
 # ############################
 # jsonify() returns 'request' object
 # @app.route('/user', methods=['GET', 'POST'])
