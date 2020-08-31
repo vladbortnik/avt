@@ -130,13 +130,33 @@ def delete():
             return render_template('index.html', result='Authorization Fail! Wrong key!')
         elif not bool(users):
             return render_template('index.html', result='There is no such a user.')
-        else:
-            user_id = api.delete(user_id, key=key)
-            if user_id is False:
-                return render_template('index.html', result=f'Uknown error. user_id: {user_id}')
-            return render_template('index.html', result=f'Success! User: {user_id} - is deleted.')
+
+        return render_template('index.html', result=f'Success! User: {user_id} - is deleted.')
 
     return render_template('delete-user-form.html')
+
+
+@app.route('/update-user', methods=['GET', 'POST'])
+def update():
+    if request.method == 'POST':
+        data = request.form
+        key = data['key']
+        user_id = data['user_id']
+        new_user = {'name': data['name'], 'age': data['age']}
+
+        user_id = api.update(user_id, new_user, key=key)
+
+        if user_id == 403:
+            return render_template('index.html', result='Authorization Fail! Wrong key!')
+        elif user_id is None:
+            return render_template('index.html', result='There is no such a user.')
+
+        return render_template('index.html', result=f'Success! User: {user_id} - is updated!',
+                               user_name=new_user['name'], user_age=new_user['age'],
+                               user_id=user_id)
+
+    return render_template('update-user-form.html')
+
 
 # @app.route('/validation-form', methods=['GET', 'POST'])
 # def validation_form():

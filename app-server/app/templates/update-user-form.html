@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+        <h1>Delete a user:</h1>
+        <hr>
+
+        <form action="/update-user" method="POST">
+
+        <div class="form-group">
+          <label>User ID</label>
+          <input type="text" class="form-control"
+                 id="user_id" autofocus name="user_id" placeholder="Enter User ID">
+
+          <label>New name</label>
+          <input type="text" class="form-control" id="name" autofocus
+                 name="name" placeholder="Select a name">
+
+          <label>New age</label>
+          <input type="text" class="form-control" id="age"
+                 autofocus name="age" placeholder="Select an age">
+
+          <label>Key</label>
+          <input type="text" class="form-control" id="key" autofocus name="key" placeholder="Enter the Key">
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

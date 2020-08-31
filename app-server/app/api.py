@@ -31,7 +31,7 @@ class API:
         self.key = key
 
     def __repr__(self):
-        console.log(f'[bold __repr__(api)',
+        console.log('[bold __repr__(api)',
                     log_locals=True)
         return f'<API key={self.key} storage={self.storage}>'
 
