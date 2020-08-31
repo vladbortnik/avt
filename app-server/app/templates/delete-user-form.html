@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+
+        <h1>Delete a user:</h1>
+        <hr>
+
+        <form action="/delete-user" method="POST">
+
+        <div class="form-group">
+          <label>User ID</label>
+          <input type="text" class="form-control"
+                 id="user_id" autofocus name="user_id" placeholder="Enter User ID">
+
+          <label>Key</label>
+          <input type="text" class="form-control" id="key" autofocus name="key" placeholder="Enter the Key">
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

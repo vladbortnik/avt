@@ -68,9 +68,15 @@ class Storage:
         def is_not_user(user):
             return user['id'] != user_id
         filtered_list = list(filter(is_not_user, users))
+        # list(filter(is_not_user, users))
+
+        # TODO: Why they are always equal??
+        # if users == filtered_list:
+        #     return False
 
         with open(self.filename, 'w') as file_object:
             for user in filtered_list:
+            # for user in users:
                 file_object.write(json.dumps(user) + '\n')
 
         return user_id

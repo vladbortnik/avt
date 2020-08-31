@@ -63,7 +63,8 @@ def post():
         user_id = api.post(user, key=key)
 
         if user_id != str(403):
-            return render_template('index.html', result='Success!', user_id=user_id)  # noqa: E501
+            return render_template('index.html', result='Success!',
+                                   user_name=user['name'], user_age=user['age'], user_id=user_id)  # noqa: E501
 
         return render_template('index.html', result='Authorization Fail! Wrong key!')  # noqa: E501
 
@@ -101,11 +102,11 @@ def list_all():
     if request.method == 'POST':
         key = request.form['key']
 
-        console.log(f'key: {key}', log_locals=True)
+        # console.log(f'key: {key}', log_locals=True)
 
         users = api.list_all(key=key)
 
-        console.log(f'users: {users}', log_locals=True)
+        # console.log(f'users: {users}', log_locals=True)
 
         if users == 403:
             return render_template('index.html', result='Authorization Fail! Wrong key!')
@@ -117,10 +118,29 @@ def list_all():
     return render_template('get-list-users.html', key='key')
 
 
+@app.route('/delete-user', methods=['GET', 'POST'])
+def delete():
+    if request.method == 'POST':
+        key = request.form['key']
+        user_id = request.form['user_id']
+
+        users = api.delete(user_id, key=key)
+
+        if users == 403:
+            return render_template('index.html', result='Authorization Fail! Wrong key!')
+        elif not bool(users):
+            return render_template('index.html', result='There is no such a user.')
+        else:
+            user_id = api.delete(user_id, key=key)
+            if user_id is False:
+                return render_template('index.html', result=f'Uknown error. user_id: {user_id}')
+            return render_template('index.html', result=f'Success! User: {user_id} - is deleted.')
+
+    return render_template('delete-user-form.html')
+
 # @app.route('/validation-form', methods=['GET', 'POST'])
 # def validation_form():
 #     return render_template('validation-form.html')
-
 
 
 # ############################

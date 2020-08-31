@@ -35,7 +35,7 @@ class API:
                     log_locals=True)
         return f'<API key={self.key} storage={self.storage}>'
 
-    # TODO: Move decorator out of API class
+    # DONE: Move decorator out of API class
     # def decorator(function):
     #     def wrapper(self, *args, **kwargs):
     #         if self.key != kwargs['key']:
@@ -58,7 +58,7 @@ class API:
         return self.storage.update(user_id, user)
 
     @decorator
-    def delete(self, user_id, key):
+    def delete(self, user_id, key='key'):
         return self.storage.delete(user_id)
 
     @decorator
