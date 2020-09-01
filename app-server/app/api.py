@@ -1,7 +1,8 @@
-# from rich.logging import RichHandler
 from rich.console import Console
 # import logging
+# from rich.logging import RichHandler
 
+#########################################
 
 # logging.basicConfig(level="NOTSET",
 #                     format="%(message)s",
@@ -11,9 +12,16 @@ from rich.console import Console
 # logging.getLogger("requests").setLevel(logging.WARNING)
 # log.info('Logger is enabled')
 
+#########################################
+
 console = Console()
+
+#########################################
+
 # console.log(f'[bold red]error_message',
 #             log_locals=True)
+
+#########################################
 
 
 def decorator(function):
@@ -35,7 +43,7 @@ class API:
                     log_locals=True)
         return f'<API key={self.key} storage={self.storage}>'
 
-    # DONE: Move decorator out of API class
+    # TODO:- - DONE: Move decorator out of API class
     # def decorator(function):
     #     def wrapper(self, *args, **kwargs):
     #         if self.key != kwargs['key']:
@@ -45,8 +53,6 @@ class API:
 
     @decorator
     def post(self, user, key):
-        # console.log(f'[bold green]method post',
-        #             log_locals=True)
         return self.storage.create(user)
 
     @decorator
@@ -65,23 +71,12 @@ class API:
     def list_all(self, key='key'):
         return self.storage.list_all()
 
-
-# from rich.logging import RichHandler
-# from rich.console import Console
-
-# console = Console()
-# logging.basicConfig(level="NOTSET",
-#                     format="%(message)s",
-#                     datefmt="[%X]",
-#                     handlers=[RichHandler()])
-# log = logging.getLogger("rich")
-# logging.getLogger("requests").setLevel(logging.WARNING)
-# log.info('Logger is enabled')
-
+#########################################
 
 # TEMPLATE: HOW TO PASS UNKNOWN ARGUMENTS TO THE DECORATOR
 # function(*args, **kwargs)
 
+#########################################
 
 # def decorator(function):
 #     def wrapper(value):
@@ -91,9 +86,13 @@ class API:
 #     return wrapper
 
 
+# Example:
+
 # @decorator
 # def function(value):
 #     print(value)
 
 # # function = decorator(function)
 # function('test')
+
+#########################################

@@ -41,8 +41,12 @@ class Storage:
         def is_user(user):
             return user['id'] == user_id
 
+#########################################
+
 # LIST COMPREHENTION
 # new_list = [new_element if condition else old_element for old_element in old_list]
+
+#########################################
 
         users = [dict(old_user, **user)
                  if old_user['id'] == user_id

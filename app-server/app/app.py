@@ -1,16 +1,18 @@
-from flask import Flask, render_template, redirect
-from sys import argv
-from pprint import pprint
+from flask import Flask, render_template
 from flask import request
 from rich.console import Console
-from rich.logging import RichHandler
-import logging
-import json
-from flask import jsonify
 from api import API
 from storage import Storage
-from uuid import UUID
+# from uuid import UUID
+# from pprint import pprint
+# from rich.logging import RichHandler
+# import logging
+# import json
+# from flask import jsonify
+# from sys import argv
+# from flask import redirect
 
+#########################################
 
 # logging.basicConfig(level="NOTSET",
 #                     format="%(message)s",
@@ -20,12 +22,13 @@ from uuid import UUID
 # logging.getLogger("requests").setLevel(logging.WARNING)
 # log.info('Logger is enabled')
 
+#########################################
+
 console = Console()
 
 
 app = Flask(__name__)
 
-# key = '123'
 storage = Storage('user.txt')
 api = API(storage, key='123')
 
@@ -33,22 +36,6 @@ api = API(storage, key='123')
 @app.route('/')
 def index():
     return render_template('index.html', result='', user='', user_name='', user_age='', user_id='')
-
-
-# ##########
-# @app.route('/sign-up', methods=['GET', 'POST'])
-# def post():
-
-#     if request.method == 'POST':
-
-#         data = request.form
-
-#         print(data)
-
-#         return render_template('index.html', result='Success!', user='', user_id='')  # noqa: E501
-
-#     return render_template('sign-up.html')
-# ################
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -102,11 +89,7 @@ def list_all():
     if request.method == 'POST':
         key = request.form['key']
 
-        # console.log(f'key: {key}', log_locals=True)
-
         users = api.list_all(key=key)
-
-        # console.log(f'users: {users}', log_locals=True)
 
         if users == 403:
             return render_template('index.html', result='Authorization Fail! Wrong key!')
@@ -158,12 +141,17 @@ def update():
     return render_template('update-user-form.html')
 
 
+#########################################
+
 # @app.route('/validation-form', methods=['GET', 'POST'])
 # def validation_form():
 #     return render_template('validation-form.html')
 
+#########################################
 
-# ############################
+
+#########################################
+
 # jsonify() returns 'request' object
 # @app.route('/user', methods=['GET', 'POST'])
 # def post():
@@ -171,4 +159,5 @@ def update():
 #   user = request.get_json()['user']
 #   console.log(f'POST', log_locals=True)
 #   return jsonify({'user': user})
-# ############################
+
+#########################################
