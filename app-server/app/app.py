@@ -44,6 +44,8 @@ def post():
 
         data = request.form
 
+        console.log(f'data = {data}', log_locals=True)
+
         user = {'name': data['name'], 'age': data['age']}
         key = data['key']
 
