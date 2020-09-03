@@ -22,10 +22,11 @@
           <label>Key</label>
           <input type="text" class="form-control" id="key" autofocus name="key" placeholder="Select a key">
 
-          <button type="submit" class="btn btn-primary">Register</button>
         </div>
 
       </form>
+
+      <button id="cleck" class="btn btn-primary">Register</button>
 
     </div>
   </div>
@@ -41,37 +42,73 @@
 
 $('document').ready(function(){
 
-var name = document.getElementById("name");
-var age = document.getElementById("age");
-var key = document.getElementById("key");
+$( "#cleck" ).click(function() {
 
-console.log('ok')
+  console.log('ok')
+
+  var name = $( "#name" ).val();
+    var age = $( "#age" ).val();
+      var key = $( "#key" ).val();
+
+  // var name = document.getElementById("name");
+  // var age = document.getElementById("age");
+  // var key = document.getElementById("key");
+
+  console.log(name)
+
+axios.post(
+  '/register',
+
+  {
+    "name": name,
+    "age": age,
+    "key": key
+  },
+
+
+{headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+            }
+
+
+
+
+}).then(function (response) {
+    console.log(response)
+  });
 
 })
 
+});
 
 
 
 
-
-// {
-//     method: "POST",
-//     url: "/register",
-
-//     body: JSON.stringify({
-//       "name": name,
-//       "age": age,
-//       "key": key
-//     }),
-
-//     headers: {
-//       "baseURL": 'http://localhost:5000',
-//       "Content-type": "application/json; charset=UTF-8"
-//     }
-// }
-  // .then(response => response.json())
-  // .then(json => console.log(json))
 
 </script>
+
+
+
+
+<!-- {
+     method: "POST",
+     url: "/register",
+
+     body: JSON.stringify({
+       "name": name,
+       "age": age,
+       "key": key
+     }),
+
+     headers: {
+       "baseURL": 'http://localhost:5000',
+       "Content-type": "application/json; charset=UTF-8"
+     }
+}
+.then(response => response.json())
+.then(json => console.log(json)) -->
+
+
 
 {% endblock %}

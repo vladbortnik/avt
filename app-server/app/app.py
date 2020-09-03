@@ -1,4 +1,4 @@
-from flask import Flask, render_template, json
+from flask import Flask, render_template
 from flask import request
 from rich.console import Console
 from api import API
@@ -43,9 +43,13 @@ def index():
 def post():
     if request.method == 'POST':
 
+        console.log('oookkkkkk')
+
         data = request.get_json()
 
         console.log(f'data = {data}', log_locals=True)
+
+        # console.log(f'data = {data}', log_locals=True)
         # user = json.loads(response.data)
         # key = response.json().key
 
