@@ -4,8 +4,42 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Avtorization</title>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+               <script
+  src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
     </head>
+
     <body>
-        {% block body %}{% endblock %}
-    </body>
+
+        <div class="container">
+  <div class="row">
+    <div class="col">
+
+        <h1>Register</h1>
+        <hr>
+
+        <form action="/register" method="POST">
+
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" id="name" autofocus name="name" placeholder="Select a name">
+
+          <label>Age</label>
+          <input type="text" class="form-control" id="age" autofocus name="age" placeholder="Select an age">
+
+          <label>Key</label>
+          <input type="text" class="form-control" id="key" autofocus name="key" placeholder="Select a key">
+
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+
+       </form>
+
+     </div>
+     </div>
+    </div>
+
+  </body>
 </html>

@@ -1,8 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, json
 from flask import request
 from rich.console import Console
 from api import API
 from storage import Storage
+# import requests
 # from uuid import UUID
 # from pprint import pprint
 # from rich.logging import RichHandler
@@ -35,16 +36,18 @@ api = API(storage, key='123')
 
 @app.route('/')
 def index():
-    return render_template('index.html', result='', user='', user_name='', user_age='', user_id='')
+    return render_template('index.html', result='', user='', name='', age='', user_id='')
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def post():
     if request.method == 'POST':
 
-        data = request.form
+        data = request.get_json()
 
         console.log(f'data = {data}', log_locals=True)
+        # user = json.loads(response.data)
+        # key = response.json().key
 
         user = {'name': data['name'], 'age': data['age']}
         key = data['key']
@@ -53,11 +56,33 @@ def post():
 
         if user_id != str(403):
             return render_template('index.html', result='Success!',
-                                   user_name=user['name'], user_age=user['age'], user_id=user_id)  # noqa: E501
+                                   name=user['name'], age=user['age'], user_id=user_id)  # noqa: E501
 
         return render_template('index.html', result='Authorization Fail! Wrong key!')  # noqa: E501
 
     return render_template('register.html')
+
+
+# @app.route('/register', methods=['GET', 'POST'])
+# def post():
+#     if request.method == 'POST':
+
+#         data = request.form
+
+#         console.log(f'data = {data}', log_locals=True)
+
+#         user = {'name': data['name'], 'age': data['age']}
+#         key = data['key']
+
+#         user_id = api.post(user, key=key)
+
+#         if user_id != str(403):
+#             return render_template('index.html', result='Success!',
+#                                    name=user['name'], age=user['age'], user_id=user_id)  # noqa: E501
+
+#         return render_template('index.html', result='Authorization Fail! Wrong key!')  # noqa: E501
+
+#     return render_template('register.html')
 
 
 @app.route('/find-user', methods=['GET', 'POST'])
@@ -81,7 +106,7 @@ def get():
         age = user['age']
 
         return render_template('index.html', result='User Found!!!',
-        user_name=name, user_age=age, user_id=user_id)  # noqa: E128
+        name=name, age=age, user_id=user_id)  # noqa: E128
 
     return render_template('find-user.html')
 
@@ -133,11 +158,11 @@ def update():
 
         if user_id == 403:
             return render_template('index.html', result='Authorization Fail! Wrong key!')
-        elif user_id is None:
+        if user_id is None:
             return render_template('index.html', result='There is no such a user.')
 
         return render_template('index.html', result=f'Success! User: {user_id} - is updated!',
-                               user_name=new_user['name'], user_age=new_user['age'],
+                               name=new_user['name'], age=new_user['age'],
                                user_id=user_id)
 
     return render_template('update-user-form.html')
