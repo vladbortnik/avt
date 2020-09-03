@@ -39,13 +39,25 @@ def index():
     return render_template('index.html', result='', user='', name='', age='', user_id='')
 
 
+# FAET: HANDLING POST REQUEST via JSON
 @app.route('/register', methods=['GET', 'POST'])
 def post():
     if request.method == 'POST':
 
-        console.log('oookkkkkk')
+        # console.log('oookkkkkk')
 
-        data = request.get_json()
+        response = request.data
+
+
+        # TODO: CONTINUE HERE.
+        # MAKE SURE THIS FUNCTIONS IS LEGIT.
+        if response.is_json() is False:
+            print(response)
+        else:
+            data = request.get_json()
+
+        # is_json(mimetype)  # noqa: F821
+
 
         console.log(f'data = {data}', log_locals=True)
 
@@ -59,14 +71,18 @@ def post():
         user_id = api.post(user, key=key)
 
         if user_id != str(403):
+
+            # PROBLEM IS THAT 'render_template' RETURNS OLD-SCHOOL 'WEB FORM'
+            # HOWEVER THE TREND TODAY IS TOWARDS
             return render_template('index.html', result='Success!',
                                    name=user['name'], age=user['age'], user_id=user_id)  # noqa: E501
 
         return render_template('index.html', result='Authorization Fail! Wrong key!')  # noqa: E501
 
-    return render_template('register.html')
+    return render_template('register-2.html')
 
 
+# FAET: HANDLING POST REQUEST via HTML Form
 # @app.route('/register', methods=['GET', 'POST'])
 # def post():
 #     if request.method == 'POST':

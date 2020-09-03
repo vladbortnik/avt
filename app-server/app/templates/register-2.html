@@ -25,12 +25,12 @@
         </div>
 
         <div>
-          <button type="submit" id="butn" class="btn btn-primary">Register</button>
+          <!-- <button id="butn" class="btn btn-primary">Register</button> -->
         </div>
 
       </form>
 
-      <!-- <button id="butn" class="btn btn-primary">Register</button> -->
+      <button id="butn" class="btn btn-primary">Register</button>
 
     </div>
   </div>
@@ -48,15 +48,16 @@ $( "#butn" ).click(function() {
 
   console.log('clicked!!!')
 
-    var name = $("#name").val();
-    var age = $( "#age" ).val();
-    var key = $( "#key" ).val();
+  var name = $("#name").val();
+  var age = $( "#age" ).val();
+  var key = $( "#key" ).val();
 
   // THIS APPROACH DID NOT WORK
   // var name = document.getElementById("name");
   // var age = document.getElementById("age");
   // var key = document.getElementById("key");
-  // console.log(name)
+
+  console.log(age)
 
 // THIS METHOD CREATES POST REUEST WITH
 // ((( 'URL'(must), data (optional), **kwords (optional) )))
