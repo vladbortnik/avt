@@ -3,6 +3,20 @@ from flask import request
 from rich.console import Console
 from api import API
 from storage import Storage
+import logging
+
+app = Flask(__name__)
+
+#########################################
+
+# Simple Python logging
+
+handler = logging.FileHandler('/srv/app/app.log')  # errors logged to this file
+handler.setLevel(logging.ERROR)  # only log errors and above
+app.logger.addHandler(handler)  # attach the handler to the app's logger
+
+#########################################
+
 # import requests
 # from uuid import UUID
 # from pprint import pprint
@@ -14,6 +28,8 @@ from storage import Storage
 # from flask import redirect
 
 #########################################
+
+# Rich logging ( - is better than Python Logging)
 
 # logging.basicConfig(level="NOTSET",
 #                     format="%(message)s",
@@ -28,58 +44,76 @@ from storage import Storage
 console = Console()
 
 
-app = Flask(__name__)
-
 storage = Storage('user.txt')
-api = API(storage, key='123')
+# api = API(storage, key='123')
 
 
-@app.route('/')
-def index():
-    return render_template('index.html', result='', user='', name='', age='', user_id='')
+# @app.route('/')
+# def index():
+#     return render_template('index.html', result='', user='', name='', age='', user_id='')
 
 
-# FAET: HANDLING POST REQUEST via JSON
-@app.route('/register', methods=['GET', 'POST'])
-def post():
-    if request.method == 'POST':
+@app.route('/user', methods=['POST'])
+def create_user():
+    if not request.is_json:
+        return {'error': 'request is not json'}, 422
 
-        # console.log('oookkkkkk')
+    try:
+        user = request.get_json()['user']
+    except KeyError:
+        return {'error': 'no user in request'}, 422
 
-        response = request.data
+    user_id = storage.create(user)
 
-
-        # TODO: CONTINUE HERE.
-        # MAKE SURE THIS FUNCTIONS IS LEGIT.
-        if response.is_json() is False:
-            print(response)
-        else:
-            data = request.get_json()
-
-        # is_json(mimetype)  # noqa: F821
+    return {'user_id': user_id}, 201
 
 
-        console.log(f'data = {data}', log_locals=True)
+@app.route('/user', methods=['GET'])
+def read_user():
+    pass
 
-        # console.log(f'data = {data}', log_locals=True)
-        # user = json.loads(response.data)
-        # key = response.json().key
 
-        user = {'name': data['name'], 'age': data['age']}
-        key = data['key']
+# # FAET: HANDLING POST REQUEST via JSON
+# @app.route('/register', methods=['GET', 'POST'])
+# def post():
+#     if request.method == 'POST':
 
-        user_id = api.post(user, key=key)
+#         # console.log('oookkkkkk')
 
-        if user_id != str(403):
+#         response = request.data
 
-            # PROBLEM IS THAT 'render_template' RETURNS OLD-SCHOOL 'WEB FORM'
-            # HOWEVER THE TREND TODAY IS TOWARDS
-            return render_template('index.html', result='Success!',
-                                   name=user['name'], age=user['age'], user_id=user_id)  # noqa: E501
 
-        return render_template('index.html', result='Authorization Fail! Wrong key!')  # noqa: E501
+#         # TODO: CONTINUE HERE.
+#         # MAKE SURE THIS FUNCTIONS IS LEGIT.
+#         if response.is_json() is False:
+#             print(response)
+#         else:
+#             data = request.get_json()
 
-    return render_template('register-2.html')
+#         # is_json(mimetype)  # noqa: F821
+
+
+#         console.log(f'data = {data}', log_locals=True)
+
+#         # console.log(f'data = {data}', log_locals=True)
+#         # user = json.loads(response.data)
+#         # key = response.json().key
+
+#         user = {'name': data['name'], 'age': data['age']}
+#         key = data['key']
+
+#         user_id = api.post(user, key=key)
+
+#         if user_id != str(403):
+
+#             # PROBLEM IS THAT 'render_template' RETURNS OLD-SCHOOL 'WEB FORM'
+#             # HOWEVER THE TREND TODAY IS TOWARDS
+#             return render_template('index.html', result='Success!',
+#                                    name=user['name'], age=user['age'], user_id=user_id)  # noqa: E501
+
+#         return render_template('index.html', result='Authorization Fail! Wrong key!')  # noqa: E501
+
+#     return render_template('register-2.html')
 
 
 # FAET: HANDLING POST REQUEST via HTML Form

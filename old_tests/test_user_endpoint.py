@@ -6,7 +6,7 @@ import pytest
 def test_create_user():
     user = {'name': 'Gloria', 'age': 36}
     key = '123'
-    response = requests.post('http://localhost:5000',
+    response = requests.post('http://localhost:5000/user',
                              json={'user': user, 'key': key})
     assert response.status_code == 201
     assert 'user_id' in response.json()
@@ -21,7 +21,7 @@ def test_create_user():
 def test_create_user_with_wrong_key():
     user = {'name': 'Gloria', 'age': 36}
     key = '1234'
-    response = requests.post('http://localhost:5000',
+    response = requests.post('http://localhost:5000/user',
                              json={'user': user, 'key': key})
 
     assert response.status_code == 403
