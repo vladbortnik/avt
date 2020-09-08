@@ -1,9 +1,10 @@
 from flask import Flask, render_template
 from flask import request
 from rich.console import Console
-from api import API
+# from api import API
 from storage import Storage
 import logging
+from rich.logging import RichHandler
 
 app = Flask(__name__)
 
@@ -11,9 +12,7 @@ app = Flask(__name__)
 
 # Simple Python logging
 
-handler = logging.FileHandler('/srv/app/app.log')  # errors logged to this file
-handler.setLevel(logging.ERROR)  # only log errors and above
-app.logger.addHandler(handler)  # attach the handler to the app's logger
+# logger.addHandler(handler)  # attach the handler to the app's logger
 
 #########################################
 
@@ -31,13 +30,13 @@ app.logger.addHandler(handler)  # attach the handler to the app's logger
 
 # Rich logging ( - is better than Python Logging)
 
-# logging.basicConfig(level="NOTSET",
-#                     format="%(message)s",
-#                     datefmt="[%X]",
-#                     handlers=[RichHandler()])
-# log = logging.getLogger("rich")
-# logging.getLogger("requests").setLevel(logging.WARNING)
-# log.info('Logger is enabled')
+logging.basicConfig(level="NOTSET",
+                    format="%(message)s",
+                    datefmt="[%X]",
+                    handlers=[RichHandler()])  # noqa: F821
+log = logging.getLogger("rich")
+logging.getLogger("requests").setLevel(logging.WARNING)
+log.info('Logger is enabled')
 
 #########################################
 
@@ -68,9 +67,25 @@ def create_user():
     return {'user_id': user_id}, 201
 
 
-@app.route('/user', methods=['GET'])
+@app.route('/user', methods=['POST'])
 def read_user():
-    pass
+    if not request.is_json:
+        return {'error': 'request is not json'}, 422
+
+    console.log('is_json passed', log_locals=True)
+
+    try:
+        user_id = request.get_json()['user_id']
+    except KeyError:
+        return {'error': 'no user_id in request'}, 422
+
+    console.log(f'user_id = {user_id}', log_locals=True)
+
+    user = storage.read(user_id)
+
+    console.log(f'user = {user}', log_locals=True)
+
+    return {'user': user}, 200
 
 
 # # FAET: HANDLING POST REQUEST via JSON
