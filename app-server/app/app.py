@@ -67,23 +67,17 @@ def create_user():
     return {'user_id': user_id}, 201
 
 
-@app.route('/user', methods=['POST'])
+@app.route('/user', methods=['GET'])
 def read_user():
     if not request.is_json:
         return {'error': 'request is not json'}, 422
-
-    console.log('is_json passed', log_locals=True)
 
     try:
         user_id = request.get_json()['user_id']
     except KeyError:
         return {'error': 'no user_id in request'}, 422
 
-    console.log(f'user_id = {user_id}', log_locals=True)
-
     user = storage.read(user_id)
-
-    console.log(f'user = {user}', log_locals=True)
 
     return {'user': user}, 200
 

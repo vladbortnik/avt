@@ -52,7 +52,7 @@ def test_read_user():
     # response = requests.post('http://localhost:5000/user', json={'user': user_sent})
     # user_id = response.json()['user_id']
 
-    response = requests.post('http://localhost:5000/user', json={'user_id': user_id})
+    response = requests.get('http://localhost:5000/user', params={'user_id': user_id})
     # user_received = response.json()['user']
 
     assert response.status_code == 200
