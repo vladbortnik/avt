@@ -68,6 +68,7 @@ class Storage:
 
     def delete(self, user_id):
         users = []
+
         with open(self.filename, 'r') as file_object:
             for line in file_object.readlines():
                 users.append(json.loads(line))
@@ -80,14 +81,17 @@ class Storage:
             for user in filtered_list:
                 file_object.write(json.dumps(user) + '\n')
 
-        return user_id
+        if users != filtered_list:
+            return user_id
+        else:
+            return None
 
-    def list_all(self):
-        users = []
-        if not os.path.isfile(self.filename):
-            return users
-        with open(self.filename, 'r') as file_object:
-            for line in file_object.readlines():
-                users.append(line)
-                console.log(f'line: {line}', log_locals=True)
-        return users
+    # def list_all(self):
+    #     users = []
+    #     if not os.path.isfile(self.filename):
+    #         return users
+    #     with open(self.filename, 'r') as file_object:
+    #         for line in file_object.readlines():
+    #             users.append(line)
+    #             console.log(f'line: {line}', log_locals=True)
+    #     return users
