@@ -4,19 +4,17 @@ import requests
 from uuid import UUID
 from rich.console import Console
 
+BASE_URL = 'http://localhost:5000'
+VALID_USER = {'name': 'Steve-77', 'age': 66}
+NOT_VALID_USER = {'name': 'not_Steve-999', 'age': 999}
 
 console = Console()
-
-
-# name = ''
-# age = 0
-# user_id = None
 
 
 def test_create_user():
     user = {'name': 'Steve-0', 'age': 3}
     # REQUESTs will change dict {'user': user} to JSON
-    response = requests.post('http://localhost:5000/user', json={'user': user})
+    response = requests.post(f'{BASE_URL}/user', json={'user': user})
 
     assert response.status_code == 201
 
@@ -25,7 +23,7 @@ def test_create_user():
 
 def test_create_user_not_json():
     user = {'name': 'Steve-1', 'age': 13}
-    response = requests.post('http://localhost:5000/user', data={'user': user})
+    response = requests.post(f'{BASE_URL}/user', data={'user': user})
 
     assert response.status_code == 422
 
@@ -34,7 +32,7 @@ def test_create_user_not_json():
 
 def test_create_user_check_uuid():
     user = {'name': 'Steve-2', 'age': 23}
-    response = requests.post('http://localhost:5000/user', json={'user': user})
+    response = requests.post(f'{BASE_URL}/user', json={'user': user})
 
     user_id = response.json()['user_id']
 
@@ -45,33 +43,24 @@ def test_create_user_check_uuid():
     # os.remove('user.txt')
 
 
-def test_read_user_response_status_code():
+def test_read_user_correct_name_age():
     # QUESTION: Is it better to just pass 'user_id' from prev func?? And HOW??
-    user = {'name': 'Steve-77', 'age': 66}
-    response = requests.post('http://localhost:5000/user', json={'user': user})
+    # ANSWER: Better to create user again (because we do 'pytest')...
+    # ...If it was a regular code then it would better  to create a class
+    # ALSO See: https://stackoverflow.com/questions/49238725/chaining-tests-and-passing-an-object-from-one-test-to-another
 
+    response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
     user_id = response.json()['user_id']
 
-    console.log(f'user_id = {user_id}', log_locals=True)
+    # console.log(f'user_id = {user_id}', log_locals=True)
 
-    response = requests.get('http://localhost:5000/user', params={'user_id': user_id})
-    console.log(f'URL = {response.url}', log_locals=True)
-    # user_received = response.json()['user']
+    response = requests.get(f'{BASE_URL}/user/{user_id}')
+
+    # console.log(f'URL = {response.url}', log_locals=True)
 
     assert response.status_code == 200
-
-
-# CONTINUE HERE: nethod=['GET'], 'user_id' is passed thru URL param (not json)
-# def test_read_user_check_name_n_age_correct():
-#     # Let's create a user for this test func()
-#     user_sent = {'name': 'Steve-443', 'age': 443}
-#     response = requests.post('http://localhost:5000/user', json={'user': user_sent})
-#     user_id = response.json()['user_id']
-
-#     response = requests.post('http://localhost:5000/user', json={'user_id': user_id})
-#     user_received = response.json()['user']
-
-#     assert user_sent['name'] is user_received['name'] and user_sent['age'] is user_received['age']
+    assert response.json()['user']['name'] == VALID_USER['name']
+    assert response.json()['user']['age'] == VALID_USER['age']
 
 
 def update_user():
