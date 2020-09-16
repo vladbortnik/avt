@@ -8,9 +8,9 @@ from rich.console import Console
 console = Console()
 
 
-name = ''
-age = 0
-user_id = None
+# name = ''
+# age = 0
+# user_id = None
 
 
 def test_create_user():
@@ -45,30 +45,33 @@ def test_create_user_check_uuid():
     # os.remove('user.txt')
 
 
-# CONTINUE HERE: nethod=['GET'], 'user_id' is passed thru URL param (not json)
-def test_read_user():
-    # QUESTION: Is it better to just pass 'user_id' from prev func??
-    # user_sent = {'name': 'Steve-3', 'age': 33}
-    # response = requests.post('http://localhost:5000/user', json={'user': user_sent})
-    # user_id = response.json()['user_id']
+def test_read_user_response_status_code():
+    # QUESTION: Is it better to just pass 'user_id' from prev func?? And HOW??
+    user = {'name': 'Steve-77', 'age': 66}
+    response = requests.post('http://localhost:5000/user', json={'user': user})
+
+    user_id = response.json()['user_id']
+
+    console.log(f'user_id = {user_id}', log_locals=True)
 
     response = requests.get('http://localhost:5000/user', params={'user_id': user_id})
+    console.log(f'URL = {response.url}', log_locals=True)
     # user_received = response.json()['user']
 
     assert response.status_code == 200
 
 
 # CONTINUE HERE: nethod=['GET'], 'user_id' is passed thru URL param (not json)
-def test_read_user_check_name_n_age_correct():
-    # Let's create a user for this test func()
-    user_sent = {'name': 'Steve-443', 'age': 443}
-    response = requests.post('http://localhost:5000/user', json={'user': user_sent})
-    user_id = response.json()['user_id']
+# def test_read_user_check_name_n_age_correct():
+#     # Let's create a user for this test func()
+#     user_sent = {'name': 'Steve-443', 'age': 443}
+#     response = requests.post('http://localhost:5000/user', json={'user': user_sent})
+#     user_id = response.json()['user_id']
 
-    response = requests.post('http://localhost:5000/user', json={'user_id': user_id})
-    user_received = response.json()['user']
+#     response = requests.post('http://localhost:5000/user', json={'user_id': user_id})
+#     user_received = response.json()['user']
 
-    assert user_sent['name'] is user_received['name'] and user_sent['age'] is user_received['age']
+#     assert user_sent['name'] is user_received['name'] and user_sent['age'] is user_received['age']
 
 
 def update_user():

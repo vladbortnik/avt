@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from flask import request
+# QUESTION: WHY Error: NO MODULE NAMED 'requests' ???
+# import requests
 from rich.console import Console
 # from api import API
 from storage import Storage
@@ -67,19 +69,28 @@ def create_user():
     return {'user_id': user_id}, 201
 
 
-@app.route('/user', methods=['GET'])
-def read_user():
-    if not request.is_json:
-        return {'error': 'request is not json'}, 422
+# http://localhost/user/<user_id>
+# http://localhost/user/1
+@app.route('/user/<user_id>', methods=['GET'])
+def read_user(user_id):
 
-    try:
-        user_id = request.get_json()['user_id']
-    except KeyError:
-        return {'error': 'no user_id in request'}, 422
-
-    user = storage.read(user_id)
+    user_id = request.args[';user_id']
+    user = storage.read_user(user_id)
 
     return {'user': user}, 200
+
+
+    # if not request.is_json:
+    #     return {'error': 'request is not json'}, 422
+    # try:
+    #     pass
+
+    # except KeyError:
+    #     return {f'error': 'no user_id in request'}, 422
+
+    # user = storage.read(user_id)
+
+    # return {f'user': user}, 200
 
 
 # # FAET: HANDLING POST REQUEST via JSON
