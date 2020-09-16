@@ -16,3 +16,15 @@ services:
 
     # THIS LINE WILL ALLOW DOCKER CONTAINER TO STAY ALIVE WITH NO SERVER RUNNING
     # command: tail -f /dev/null
+
+  app_postgres:
+    container_name: postgres
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=sandbox
+      - POSTGRES_USER=sandbox
+      - POSTGRES_DB=sandbox
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
