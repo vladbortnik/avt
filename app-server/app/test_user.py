@@ -145,4 +145,36 @@ def test_user_delete_user_deleted():
 
     assert response.status_code == 200
 
-# os.remove('user.txt')
+
+def test_user_authenticate_success():
+    response = requests.post(f'{BASE_URL}/user_authenticate', json={'login': 'abc', 'password': '123'})
+
+    console.log('dsfwrgewrgewt', log_locals=True)
+
+    assert response.status_code == 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

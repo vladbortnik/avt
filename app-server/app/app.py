@@ -2,14 +2,21 @@ from flask import Flask
 # from flask import render_template
 from flask import request
 # QUESTION: WHY Error: NO MODULE NAMED 'requests' ???
+# ANSWQER: need to do: $ 'docker-compose build'
 # import requests
 from rich.console import Console
 # from api import API
 from storage import Storage
 import logging
 from rich.logging import RichHandler
+import jwt
+
+VALID_USER = {'name': 'Steve-77', 'age': 66}
+
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'fc3c9cc6-6748-49f3-b5eb-1eb711a7d0de'
 
 #########################################
 
@@ -119,6 +126,27 @@ def user_delete(user_id):
         return {'user_id': user_id}, 200
     else:
         return {'error': 'user not found'}, 404
+
+
+@app.route('/user_authenticate', methods=['POST'])
+def user_authenticate():
+    # Receive login & password
+    try:
+        response = request.is_json
+    except KeyError:
+        return {'error': 'not a json'}
+
+    login = request.get_json()['login']
+    password = request.get_json()['password']
+
+    # Check the correctness of the credentials
+
+    # Assign & Send a token to the user
+
+    token = jwt.encode(VALID_USER, app.config['SECRET_KEY'])
+
+    return {'user': VALID_USER, 'token': token}, 200
+
 
 
 #########################################
