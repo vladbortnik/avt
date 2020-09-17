@@ -1,7 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask
+# from flask import render_template
 from flask import request
 # QUESTION: WHY Error: NO MODULE NAMED 'requests' ???
-import requests
+# import requests
 from rich.console import Console
 # from api import API
 from storage import Storage
@@ -72,162 +73,52 @@ def create_user():
 # http://localhost/user/<user_id>
 # http://localhost/user/1
 @app.route('/user/<user_id>', methods=['GET'])
-def read_user(user_id):
+def user_read(user_id):
 
-    # user_id = request.args['user_id']
     user = storage.read(user_id)
 
     return {'user': user}, 200
 
 
+@app.route('/user/<user_id>', methods=['PATCH'])
+def user_update(user_id):
+    if not request.is_json:
+        return {'error': 'request is not json'}, 422
 
-# # FAET: HANDLING POST REQUEST via JSON
-# @app.route('/register', methods=['GET', 'POST'])
-# def post():
-#     if request.method == 'POST':
+    # Easier to ask for forgiveness than permission: EAFP
+    # If not request.get_json()['user'] then ...
+    try:
+        user = request.get_json()['user']
+    except KeyError:
+        return {'error': 'no user in request'}, 422
 
-#         # console.log('oookkkkkk')
-
-#         response = request.data
-
-
-#         # TODO: CONTINUE HERE.
-#         # MAKE SURE THIS FUNCTIONS IS LEGIT.
-#         if response.is_json() is False:
-#             print(response)
-#         else:
-#             data = request.get_json()
-
-#         # is_json(mimetype)  # noqa: F821
-
-
-#         console.log(f'data = {data}', log_locals=True)
-
-#         # console.log(f'data = {data}', log_locals=True)
-#         # user = json.loads(response.data)
-#         # key = response.json().key
-
-#         user = {'name': data['name'], 'age': data['age']}
-#         key = data['key']
-
-#         user_id = api.post(user, key=key)
-
-#         if user_id != str(403):
-
-#             # PROBLEM IS THAT 'render_template' RETURNS OLD-SCHOOL 'WEB FORM'
-#             # HOWEVER THE TREND TODAY IS TOWARDS
-#             return render_template('index.html', result='Success!',
-#                                    name=user['name'], age=user['age'], user_id=user_id)  # noqa: E501
-
-#         return render_template('index.html', result='Authorization Fail! Wrong key!')  # noqa: E501
-
-#     return render_template('register-2.html')
-
-
-# FAET: HANDLING POST REQUEST via HTML Form
-# @app.route('/register', methods=['GET', 'POST'])
-# def post():
-#     if request.method == 'POST':
-
-#         data = request.form
-
-#         console.log(f'data = {data}', log_locals=True)
-
-#         user = {'name': data['name'], 'age': data['age']}
-#         key = data['key']
-
-#         user_id = api.post(user, key=key)
-
-#         if user_id != str(403):
-#             return render_template('index.html', result='Success!',
-#                                    name=user['name'], age=user['age'], user_id=user_id)  # noqa: E501
-
-#         return render_template('index.html', result='Authorization Fail! Wrong key!')  # noqa: E501
-
-#     return render_template('register.html')
-
-
-@app.route('/find-user', methods=['GET', 'POST'])
-def get():
-    if request.method == 'POST':
-
-        data = request.form
-
-        user_id = data['user_id']
-        key = data['key']
-        user = api.get(user_id, key=key)
-
-        if user == 403:
-            return render_template('index.html', result='Authorization Fail! Wrong key!')  # noqa: E501
-        elif not bool(user):
-            return render_template('index.html', result='User not found.')
-
-        console.log(f'user: {user}', log_locals=True)
-
+    try:
         name = user['name']
+    except KeyError:
+        return {'error': "user['name'] error"}, 422
+
+    try:
         age = user['age']
+    except KeyError:
+        return {'error': "user['age'] error"}, 422
 
-        return render_template('index.html', result='User Found!!!',
-        name=name, age=age, user_id=user_id)  # noqa: E128
+    user_id = storage.update(user_id, user)
 
-    return render_template('find-user.html')
-
-
-@app.route('/list-all-users', methods=['GET', 'POST'])
-def list_all():
-    if request.method == 'POST':
-        key = request.form['key']
-
-        users = api.list_all(key=key)
-
-        if users == 403:
-            return render_template('index.html', result='Authorization Fail! Wrong key!')
-        if not bool(users):
-            return render_template('index.html', result='List of Users is empty!')
-        else:
-            return render_template('list-users.html', result='Here is the list of Users: ', users=users)
-
-    return render_template('get-list-users.html', key='key')
+    if user_id:
+        return {'user_id': user_id}, 200
+    else:
+        return {'error': 'user not found'}, 404
 
 
-@app.route('/delete-user', methods=['GET', 'POST'])
-def delete():
-    if request.method == 'POST':
-        key = request.form['key']
-        user_id = request.form['user_id']
+@app.route('/user/<user_id>', methods=['DELETE'])
+def user_delete(user_id):
 
-        users = api.delete(user_id, key=key)
+    user_id = storage.delete(user_id)
 
-        if users == 403:
-            return render_template('index.html', result='Authorization Fail! Wrong key!')
-        elif not bool(users):
-            return render_template('index.html', result='There is no such a user.')
-
-        return render_template('index.html', result=f'Success! User: {user_id} - is deleted.')
-
-    return render_template('delete-user-form.html')
-
-
-@app.route('/update-user', methods=['GET', 'POST'])
-def update():
-    if request.method == 'POST':
-        data = request.form
-        key = data['key']
-        user_id = data['user_id']
-        new_user = {'name': data['name'], 'age': data['age']}
-
-        user_id = api.update(user_id, new_user, key=key)
-
-        if user_id == 403:
-            return render_template('index.html', result='Authorization Fail! Wrong key!')
-        if user_id is None:
-            return render_template('index.html', result='There is no such a user.')
-
-        return render_template('index.html', result=f'Success! User: {user_id} - is updated!',
-                               name=new_user['name'], age=new_user['age'],
-                               user_id=user_id)
-
-    return render_template('update-user-form.html')
+    if user_id:
+        return {'user_id': user_id}, 200
+    else:
+        return {'error': 'user not found'}, 404
 
 
 #########################################
