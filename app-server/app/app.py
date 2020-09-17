@@ -121,67 +121,6 @@ def user_delete(user_id):
         return {'error': 'user not found'}, 404
 
 
-
-
-
-
-# @app.route('/update-user', methods=['GET', 'POST'])
-# def update():
-#     if request.method == 'POST':
-#         data = request.form
-#         key = data['key']
-#         user_id = data['user_id']
-#         new_user = {'name': data['name'], 'age': data['age']}
-
-#         user_id = api.update(user_id, new_user, key=key)
-
-#         if user_id == 403:
-#             return render_template('index.html', result='Authorization Fail! Wrong key!')
-#         if user_id is None:
-#             return render_template('index.html', result='There is no such a user.')
-
-#         return render_template('index.html', result=f'Success! User: {user_id} - is updated!',
-#                                name=new_user['name'], age=new_user['age'],
-#                                user_id=user_id)
-
-#     return render_template('update-user-form.html')
-
-
-# @app.route('/list-all-users', methods=['GET', 'POST'])
-# def list_all():
-#     if request.method == 'POST':
-#         key = request.form['key']
-
-#         users = api.list_all(key=key)
-
-#         if users == 403:
-#             return render_template('index.html', result='Authorization Fail! Wrong key!')
-#         if not bool(users):
-#             return render_template('index.html', result='List of Users is empty!')
-#         else:
-#             return render_template('list-users.html', result='Here is the list of Users: ', users=users)
-
-#     return render_template('get-list-users.html', key='key')
-
-
-# @app.route('/delete-user', methods=['GET', 'POST'])
-# def delete():
-#     if request.method == 'POST':
-#         key = request.form['key']
-#         user_id = request.form['user_id']
-
-#         users = api.delete(user_id, key=key)
-
-#         if users == 403:
-#             return render_template('index.html', result='Authorization Fail! Wrong key!')
-#         elif not bool(users):
-#             return render_template('index.html', result='There is no such a user.')
-
-#         return render_template('index.html', result=f'Success! User: {user_id} - is deleted.')
-
-#     return render_template('delete-user-form.html')
-
-
 #########################################
 
 # @app.route('/validation-form', methods=['GET', 'POST'])
