@@ -154,12 +154,22 @@ def test_user_authenticate_success():
     assert response.status_code == 200
 
 
+# PLAN:
+
+# 1. Create User Identity / Issue User ID  -->> (Identity > ID)
+
+# 2. Get User Credentials / Check User Credentials
+
+# 3. Authorize User / Check User Authorization
 
 
+def test_create_user_success():
+    # response = requests.post(f'{BASE_URL}/user', json={'IP': '170.6.12.88'})
+    pass
 
 
-
-
+def test_create_user_fail():
+    pass
 
 
 

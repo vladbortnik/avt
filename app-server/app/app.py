@@ -143,10 +143,27 @@ def user_authenticate():
 
     # Assign & Send a token to the user
 
-    token = jwt.encode(VALID_USER, app.config['SECRET_KEY'])
+    # token = jwt.encode(VALID_USER, app.config['SECRET_KEY'])
+    token = jwt.encode(VALID_USER, app.config['SECRET_KEY']).decode('utf-8')
+
+    print(token)
 
     return {'user': VALID_USER, 'token': token}, 200
 
+
+@app.route('/user', methods=['POST'])
+def create_user():
+    if not request.is_json:
+        return {'error': 'request is not json'}, 422
+
+    try:
+        user = request.get_json()['user']
+    except KeyError:
+        return {'error': 'no user in request'}, 422
+
+    user_id = storage.create(user)
+
+    return {'user_id': user_id}, 201
 
 
 #########################################
