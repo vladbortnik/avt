@@ -10,6 +10,13 @@ from storage import Storage
 import logging
 from rich.logging import RichHandler
 import jwt
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker
+from contextlib import contextmanager
+from os import environ
+from sqlalchemy.ext.declarative import declarative_base
+from flask import jsonify
+
 
 VALID_USER = {'name': 'Steve-77', 'age': 66}
 
@@ -51,19 +58,62 @@ log.info('Logger is enabled')
 #########################################
 
 console = Console()
-
-
 storage = Storage('user.txt')
-# api = API(storage, key='123')
+
+engine = create_engine(f"postgresql://{environ.get('POSTGRES_USER')}:{environ.get('POSTGRES_PASSWORD')}@{environ.get('POSTGRES_HOST')}/{environ.get('POSTGRES_DB')}")
+
+Session = sessionmaker(bind=engine, expire_on_commit=False)
+
+Base = declarative_base()
 
 
-# @app.route('/')
-# def index():
-#     return render_template('index.html', result='', user='', name='', age='', user_id='')
+@contextmanager
+def session_scope():
+    session = Session()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(256), default=None, unique=False)
+    age = Column(Integer, default=None)
+
+    def to_dict(self):
+
+        return {'user_id': self.id, 'user_name': self.name, 'user_age': self.age}
+
+
+@app.route('/create_table', methods=['GET'])
+def create_table():
+    User.__table__.create(engine)
+
+    return jsonify(engine.table_names())
+
+
+@app.route('/table_drop', methods=['GET'])
+def table_drop():
+    User.__table__.drop(engine)
+
+    return jsonify(engine.table_names())
+
+
+@app.route('/table_list', methods=['GET'])
+def table_list():
+
+    # return jsonify(engine.table_names())
+    return {'table_names': engine.table_names()}
 
 
 @app.route('/user', methods=['POST'])
-def create_user():
+def user_create():
     if not request.is_json:
         return {'error': 'request is not json'}, 422
 
@@ -72,19 +122,44 @@ def create_user():
     except KeyError:
         return {'error': 'no user in request'}, 422
 
-    user_id = storage.create(user)
+    with session_scope() as session:
+        user = User()
+        user.name = VALID_USER['name']
+        user.age = VALID_USER['age']
+        session.add(user)
 
-    return {'user_id': user_id}, 201
+    return {'user_id': user.id}, 201
 
+
+# @app.route('/user', methods=['POST'])
+# def create_user():
+#     if not request.is_json:
+#         return {'error': 'request is not json'}, 422
+
+#     try:
+#         user = request.get_json()['user']
+#     except KeyError:
+#         return {'error': 'no user in request'}, 422
+
+#     user_id = storage.create(user)
+
+#     return {'user_id': user_id}, 201
+
+@app.route('/user/<user_id>', methods=['GET'])
+def user_read(user_id):
+    with session_scope() as session:
+        user = session.query(User).get(user_id)
+
+    return {'user': user.to_dict()}, 200
 
 # http://localhost/user/<user_id>
 # http://localhost/user/1
-@app.route('/user/<user_id>', methods=['GET'])
-def user_read(user_id):
+# @app.route('/user/<user_id>', methods=['GET'])
+# def user_read(user_id):
 
-    user = storage.read(user_id)
+#     user = storage.read(user_id)
 
-    return {'user': user}, 200
+#     return {'user': user}, 200
 
 
 @app.route('/user/<user_id>', methods=['PATCH'])
@@ -92,40 +167,86 @@ def user_update(user_id):
     if not request.is_json:
         return {'error': 'request is not json'}, 422
 
-    # Easier to ask for forgiveness than permission: EAFP
-    # If not request.get_json()['user'] then ...
     try:
         user = request.get_json()['user']
     except KeyError:
         return {'error': 'no user in request'}, 422
 
     try:
-        name = user['name']
+        user = request.get_json()['user']
+    except KeyError:
+        return {'error': 'no user in request'}, 422
+
+    try:
+        new_name = user['name']
     except KeyError:
         return {'error': "user['name'] error"}, 422
 
     try:
-        age = user['age']
+        new_age = user['age']
     except KeyError:
         return {'error': "user['age'] error"}, 422
 
-    user_id = storage.update(user_id, user)
+    with session_scope() as session:
+        user = session.query(User).get(user_id)
+        user.name = new_name
+        user.age = new_age
 
-    if user_id:
-        return {'user_id': user_id}, 200
-    else:
-        return {'error': 'user not found'}, 404
+    return {'new_user': user.to_dict()}, 200
+
+
+# @app.route('/user/<user_id>', methods=['PATCH'])
+# def user_update(user_id):
+#     if not request.is_json:
+#         return {'error': 'request is not json'}, 422
+
+#     # Easier to ask for forgiveness than permission: EAFP
+#     # If not request.get_json()['user'] then ...
+#     try:
+#         user = request.get_json()['user']
+#     except KeyError:
+#         return {'error': 'no user in request'}, 422
+
+#     try:
+#         name = user['name']
+#     except KeyError:
+#         return {'error': "user['name'] error"}, 422
+
+#     try:
+#         age = user['age']
+#     except KeyError:
+#         return {'error': "user['age'] error"}, 422
+
+#     user_id = storage.update(user_id, user)
+
+#     if user_id:
+#         return {'user_id': user_id}, 200
+#     else:
+#         return {'error': 'user not found'}, 404
 
 
 @app.route('/user/<user_id>', methods=['DELETE'])
 def user_delete(user_id):
+    with session_scope() as session:
+        user = session.query(User).get(user_id)
 
-    user_id = storage.delete(user_id)
+        if user:
+            user_id = user.id
+            session.delete(user)
+            return {'user_id': user_id}, 200
+        else:
+            return {'error': 'user not found'}, 404
 
-    if user_id:
-        return {'user_id': user_id}, 200
-    else:
-        return {'error': 'user not found'}, 404
+
+# @app.route('/user/<user_id>', methods=['DELETE'])
+# def user_delete(user_id):
+
+#     user_id = storage.delete(user_id)
+
+#     if user_id:
+#         return {'user_id': user_id}, 200
+#     else:
+#         return {'error': 'user not found'}, 404
 
 
 @app.route('/user_authenticate', methods=['POST'])

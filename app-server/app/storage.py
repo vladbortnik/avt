@@ -16,6 +16,15 @@ class Storage:
     def __repr__(self):
         return f'<Storage filename={self.filename}>'
 
+    # EXAMPLE OF CLASSMETHOD with ADDITIONAL MEMBERS
+    # @classmethod
+    # def foo(cls, x, y):
+    #     bar = cls()
+    #     bar.x = x
+    #     bar.y = y
+
+    #     return bar
+
     def create(self, user):
         user['id'] = str(uuid4())
         file_object = open(self.filename, 'a')

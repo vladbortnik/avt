@@ -12,7 +12,7 @@ UPDATED_USER = {'name': 'Jobs-UPDATED', 'age': 7}
 console = Console()
 
 
-def test_user_create():
+def test_user_create_base():
     # user = {'name': 'Steve-0', 'age': 3}
     # REQUESTs will change dict {'user': user} to JSON
     response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
@@ -114,14 +114,26 @@ def test_user_update_user_not_found():
     assert response.status_code == 404
 
 
-def test_user_update_correct_updated():
+# TEMP TEST FOR USER # 2
+def test_user_update_correct_update():
 
-    response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
-    user_id = response.json()['user_id']
+    # response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
+    # user_id = response.json()['user_id']
 
-    response = requests.patch(f'{BASE_URL}/user/{user_id}', json={'user': VALID_USER})
+    response = requests.patch(f'{BASE_URL}/user/2', json={'user': UPDATED_USER})
 
     assert response.status_code == 200
+
+
+# OLD TEST for Storage
+# def test_user_update_correct_update():
+
+#     response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
+#     user_id = response.json()['user_id']
+
+#     response = requests.patch(f'{BASE_URL}/user/{user_id}', json={'user': UPDATED_USER})
+
+#     assert response.status_code == 200
 
 
 def test_user_delete_no_user_found():
@@ -137,13 +149,24 @@ def test_user_delete_no_user_found():
     assert response.status_code == 404
 
 
+# TEMP TEST FOR USER # 2
 def test_user_delete_user_deleted():
-    response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
-    user_id = response.json()['user_id']
+    # response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
+    # user_id = response.json()['user_id']
 
-    response = requests.delete(f'{BASE_URL}/user/{user_id}')
+    response = requests.delete(f'{BASE_URL}/user/2')
 
     assert response.status_code == 200
+
+
+# OLD TEST for Storage
+# def test_user_delete_user_deleted():
+#     response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
+#     user_id = response.json()['user_id']
+
+#     response = requests.delete(f'{BASE_URL}/user/user_id')
+
+#     assert response.status_code == 200
 
 
 def test_user_authenticate_success():
