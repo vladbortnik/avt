@@ -1,12 +1,6 @@
 from flask import Flask
-# from flask import render_template
 from flask import request
-# QUESTION: WHY Error: NO MODULE NAMED 'requests' ???
-# ANSWQER: need to do: $ 'docker-compose build'
-# import requests
 from rich.console import Console
-# from api import API
-from storage import Storage
 import logging
 from rich.logging import RichHandler
 import jwt
@@ -16,32 +10,21 @@ from contextlib import contextmanager
 from os import environ
 from sqlalchemy.ext.declarative import declarative_base
 from flask import jsonify
+# import OutputMixin
 
 
 VALID_USER = {'name': 'Steve-77', 'age': 66}
 
-
 app = Flask(__name__)
-
 app.config['SECRET_KEY'] = 'fc3c9cc6-6748-49f3-b5eb-1eb711a7d0de'
 
-#########################################
-
-# Simple Python logging
-
-# logger.addHandler(handler)  # attach the handler to the app's logger
 
 #########################################
 
-# import requests
-# from uuid import UUID
-# from pprint import pprint
-# from rich.logging import RichHandler
-# import logging
-# import json
-# from flask import jsonify
-# from sys import argv
-# from flask import redirect
+# Simple Python logging:
+# (attaches the handler to the app's logger)
+
+# logger.addHandler(handler)
 
 #########################################
 
@@ -58,13 +41,23 @@ log.info('Logger is enabled')
 #########################################
 
 console = Console()
-storage = Storage('user.txt')
+# storage = Storage('user.txt')
+
+
+######################################################
+# NO LOGIC. JUST REMEMBER: 'engine', 'Session', 'Base'.
+######################################################
+
 
 engine = create_engine(f"postgresql://{environ.get('POSTGRES_USER')}:{environ.get('POSTGRES_PASSWORD')}@{environ.get('POSTGRES_HOST')}/{environ.get('POSTGRES_DB')}")
-
 Session = sessionmaker(bind=engine, expire_on_commit=False)
-
 Base = declarative_base()
+
+
+#################################################
+# THE FOLLOWING MASTERPIECE IS PURE NONSENSE OF
+# THE TWISTED MIND OF 'GEORGY ALEX, THE GREAT'!!!
+#################################################
 
 
 @contextmanager
@@ -80,7 +73,13 @@ def session_scope():
         session.close()
 
 
+#############################################
+# FOR EVERY TABLE WE CREATE A SEPARATE CLASS
+#############################################
+
+
 class User(Base):
+
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(256), default=None, unique=False)
@@ -88,7 +87,13 @@ class User(Base):
 
     def to_dict(self):
 
-        return {'user_id': self.id, 'user_name': self.name, 'user_age': self.age}
+        return {'user_id': self.id,
+                'user_name': self.name, 'user_age': self.age}
+
+
+#######################
+# NOW LET'S CREATE API
+#######################
 
 
 @app.route('/create_table', methods=['GET'])
@@ -131,35 +136,12 @@ def user_create():
     return {'user_id': user.id}, 201
 
 
-# @app.route('/user', methods=['POST'])
-# def create_user():
-#     if not request.is_json:
-#         return {'error': 'request is not json'}, 422
-
-#     try:
-#         user = request.get_json()['user']
-#     except KeyError:
-#         return {'error': 'no user in request'}, 422
-
-#     user_id = storage.create(user)
-
-#     return {'user_id': user_id}, 201
-
 @app.route('/user/<user_id>', methods=['GET'])
 def user_read(user_id):
     with session_scope() as session:
         user = session.query(User).get(user_id)
 
-    return {'user': user.to_dict()}, 200
-
-# http://localhost/user/<user_id>
-# http://localhost/user/1
-# @app.route('/user/<user_id>', methods=['GET'])
-# def user_read(user_id):
-
-#     user = storage.read(user_id)
-
-#     return {'user': user}, 200
+    return {'user': user.to_dict}, 200
 
 
 @app.route('/user/<user_id>', methods=['PATCH'])
@@ -195,36 +177,6 @@ def user_update(user_id):
     return {'new_user': user.to_dict()}, 200
 
 
-# @app.route('/user/<user_id>', methods=['PATCH'])
-# def user_update(user_id):
-#     if not request.is_json:
-#         return {'error': 'request is not json'}, 422
-
-#     # Easier to ask for forgiveness than permission: EAFP
-#     # If not request.get_json()['user'] then ...
-#     try:
-#         user = request.get_json()['user']
-#     except KeyError:
-#         return {'error': 'no user in request'}, 422
-
-#     try:
-#         name = user['name']
-#     except KeyError:
-#         return {'error': "user['name'] error"}, 422
-
-#     try:
-#         age = user['age']
-#     except KeyError:
-#         return {'error': "user['age'] error"}, 422
-
-#     user_id = storage.update(user_id, user)
-
-#     if user_id:
-#         return {'user_id': user_id}, 200
-#     else:
-#         return {'error': 'user not found'}, 404
-
-
 @app.route('/user/<user_id>', methods=['DELETE'])
 def user_delete(user_id):
     with session_scope() as session:
@@ -236,17 +188,6 @@ def user_delete(user_id):
             return {'user_id': user_id}, 200
         else:
             return {'error': 'user not found'}, 404
-
-
-# @app.route('/user/<user_id>', methods=['DELETE'])
-# def user_delete(user_id):
-
-#     user_id = storage.delete(user_id)
-
-#     if user_id:
-#         return {'user_id': user_id}, 200
-#     else:
-#         return {'error': 'user not found'}, 404
 
 
 @app.route('/user_authenticate', methods=['POST'])
@@ -270,25 +211,3 @@ def user_authenticate():
     print(token)
 
     return {'user': VALID_USER, 'token': token}, 200
-
-
-#########################################
-
-# @app.route('/validation-form', methods=['GET', 'POST'])
-# def validation_form():
-#     return render_template('validation-form.html')
-
-#########################################
-
-
-#########################################
-
-# jsonify() returns 'request' object
-# @app.route('/user', methods=['GET', 'POST'])
-# def post():
-    #    console.log(f'{request.args}')
-#   user = request.get_json()['user']
-#   console.log(f'POST', log_locals=True)
-#   return jsonify({'user': user})
-
-#########################################

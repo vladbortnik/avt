@@ -1,3 +1,6 @@
+# THIS CLASS IS CREATED TO STANDARDIZE TABLE CONTENT
+# EX: ROW -> to_json   >>OR<<    ROW -> to_dict
+
 class OutputMixin(object):
     RELATIONSHIPS_TO_DICT = False
 
