@@ -62,12 +62,12 @@ def test_user_read_correct_name_age():
 
     # console.log(f'URL = {response.url}', log_locals=True)
 
-    # console.log(f'response = {response}', log_locals=True)
+    console.log(f'response = {response.json()}', log_locals=True)
     # console.log(f"response['user'] = {response['user']}", log_locals=True)
 
     # assert response.status_code == 200
     assert response.json()['user']['name'] == VALID_USER['name']
-    assert response.json()['age'] == VALID_USER['age']
+    assert response.json()['user']['age'] == VALID_USER['age']
     # assert response['user']['name'] == VALID_USER['name']
     # assert response['user']['age'] == VALID_USER['age']
 
@@ -118,9 +118,9 @@ def test_user_update_user_name_or_age_is_not_valid():
 def test_user_update_user_not_found():
 
     response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
-    user_id = response.json()['user_id'] + '789'
+    user_id = response.json()['user_id']
 
-    response = requests.patch(f'{BASE_URL}/user/{user_id}', json={'user': VALID_USER})
+    response = requests.patch(f'{BASE_URL}/user/{user_id + 1}', json={'user': VALID_USER})
 
     assert response.status_code == 404
 
@@ -129,10 +129,10 @@ def test_user_update_user_not_found():
 # TEMP TEST FOR USER # 2
 def test_user_update_correct_update():
 
-    # response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
-    # user_id = response.json()['user_id']
+    response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
+    user_id = response.json()['user_id']
 
-    response = requests.patch(f'{BASE_URL}/user/2', json={'user': UPDATED_USER})
+    response = requests.patch(f'{BASE_URL}/user/{user_id}', json={'user': UPDATED_USER})
 
     assert response.status_code == 200
 
@@ -142,7 +142,7 @@ def test_user_delete_no_user_found():
     response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
     user_id = response.json()['user_id']
 
-    user_id += '789'
+    user_id += 789
     response = requests.delete(f'{BASE_URL}/user/{user_id}')
 
     console.log(f'URL = {response.url}', log_locals=True)
@@ -154,10 +154,10 @@ def test_user_delete_no_user_found():
 # 10
 # TEMP TEST FOR USER # 2
 def test_user_delete_user_deleted():
-    # response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
-    # user_id = response.json()['user_id']
+    response = requests.post(f'{BASE_URL}/user', json={'user': VALID_USER})
+    user_id = response.json()['user_id']
 
-    response = requests.delete(f'{BASE_URL}/user/2')
+    response = requests.delete(f'{BASE_URL}/user/{user_id}')
 
     assert response.status_code == 200
 

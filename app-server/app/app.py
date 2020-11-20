@@ -88,7 +88,7 @@ class User(Base):
     def to_dict(self):
 
         return {'user_id': self.id,
-                'user_name': self.name, 'user_age': self.age}
+                'name': self.name, 'age': self.age}
 
 
 #######################
@@ -141,18 +141,13 @@ def user_read(user_id):
     with session_scope() as session:
         user = session.query(User).get(user_id)
 
-    return {'user': user.to_dict}, 200
+    return {'user': user.to_dict()}, 200
 
 
 @app.route('/user/<user_id>', methods=['PATCH'])
 def user_update(user_id):
     if not request.is_json:
         return {'error': 'request is not json'}, 422
-
-    try:
-        user = request.get_json()['user']
-    except KeyError:
-        return {'error': 'no user in request'}, 422
 
     try:
         user = request.get_json()['user']
@@ -171,6 +166,10 @@ def user_update(user_id):
 
     with session_scope() as session:
         user = session.query(User).get(user_id)
+
+        if not user:
+            return {'error': 'user not found'}, 404
+
         user.name = new_name
         user.age = new_age
 
