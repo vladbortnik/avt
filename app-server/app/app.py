@@ -189,6 +189,19 @@ def user_delete(user_id):
             return {'error': 'user not found'}, 404
 
 
+###############################################
+
+# THE FOLLOWING CODE WILL BE USED AS API FOR
+# USER REGISTRATION, AUTHENTICATION AND
+# AUTHORIZATION AUTHORIZATION
+
+###############################################
+
+# ... CONTINUE HERE
+
+###############################################
+
+
 @app.route('/user_authenticate', methods=['POST'])
 def user_authenticate():
     # Receive login & password

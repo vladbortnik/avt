@@ -171,15 +171,11 @@ def test_user_authenticate_success():
     assert response.status_code == 200
 
 
-################################################################
+#################################
 
-# @TODO:
+# TODO: FIMISH @ TESTS
 
-# 1. Create User Identity / Issue User ID  -->> (Identity > ID)
-# 2. Get User Credentials / Check User Credentials
-# 3. Authorize User / Check User Authorization
-
-################################################################
+#################################
 
 
 # 12

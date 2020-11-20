@@ -1,0 +1,11 @@
+################################################################
+
+# @TODO:
+
+# 1. Create User Identity / Issue User ID  -->> (Identity > ID)
+# 2. Get User Credentials
+# 2.5. Check User Credentials (Authentication)
+# 3. Authorize User
+
+################################################################
+
