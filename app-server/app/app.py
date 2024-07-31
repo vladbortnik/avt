@@ -1,23 +1,19 @@
-from flask import Flask
-from flask import request
-from rich.console import Console
-import logging
-from rich.logging import RichHandler
 import jwt
+import logging
+from os import environ
+from flask import Flask, request, jsonify
+from rich.console import Console
+from rich.logging import RichHandler
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker
-from contextlib import contextmanager
-from os import environ
 from sqlalchemy.ext.declarative import declarative_base
-from flask import jsonify
+from contextlib import contextmanager
 # import OutputMixin
-
 
 VALID_USER = {'name': 'Steve-77', 'age': 66}
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'fc3c9cc6-6748-49f3-b5eb-1eb711a7d0de'
-
 
 #########################################
 
@@ -42,7 +38,6 @@ log.info('Logger is enabled')
 
 console = Console()
 # storage = Storage('user.txt')
-
 
 ######################################################
 # NO LOGIC. JUST REMEMBER: 'engine', 'Session', 'Base'.
